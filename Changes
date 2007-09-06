@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::ConvexHull.
 
+1.02  Thu Sep 06 11:39 2007
+        - Fixed bug with duplicate points. (Thanks to John Harvey!
+
 1.01  Fri Jun 30 21:25 2006
 	- Distribution upgrade:
 	--> Added META.yml

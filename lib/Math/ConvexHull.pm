@@ -1,22 +1,22 @@
 package Math::ConvexHull;
 
-use 5.006;
 use strict;
-use warnings;
 
 use constant PI => 3.1415926535897932384626433832795;
 
 require Exporter;
 
-our @ISA = qw(Exporter);
+use vars qw/@ISA %EXPORT_TAGS @EXPORT_OK $VERSION/;
 
-our %EXPORT_TAGS = ( 'all' => [ qw(
+@ISA = qw(Exporter);
+
+%EXPORT_TAGS = ( 'all' => [ qw(
 	convex_hull
 ) ] );
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+@EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '1.01';
+$VERSION = '1.02';
 
 
 
@@ -34,6 +34,19 @@ sub convex_hull {
 				$a->[1][1] <=> $b->[1][1]
 			}
 			@$angles_points;             # O(n*log(n))
+
+        # remove duplicates (O(n))
+        my $prev = $angles_points->[0][1];
+        for (my $i = 1; $i < @$angles_points; $i++) {
+          my $this = $angles_points->[$i][1];
+          if ( $this->[0]+1e-15 > $prev->[0] && $this->[0]-1e-15 < $prev->[0]
+            && $this->[1]+1e-15 > $prev->[1] && $this->[1]-1e-15 < $prev->[1] ) {
+            splice(@$angles_points, $i, 1);
+            $i--;
+            next;
+          }
+          $prev = $this;
+        }
 
 	unshift @$angles_points, [undef, $points->[$start_index]];
 	my $hull = [
@@ -179,10 +192,6 @@ coordinate. So an example use of convex_hull() would be:
 Please note that convex_hull() does not return I<copies> of the points but
 instead returns the same array references that were passed in.
 
-=head1 AUTHOR
-
-Steffen Mueller, E<lt>hull-module at steffen-mueller dot netE<gt>
-
 =head1 SEE ALSO
 
 New versions of this module can be found on http://steffen-mueller.net or CPAN.
@@ -192,5 +201,17 @@ implementation in the German translation of
 Orwant et al, "Mastering Algorithms with Perl". Their code reads better than
 mine, so if you looked at the module sources and don't understand
 what's going on, I suggest you have a look at the book.
+
+=head1 AUTHOR
+
+Steffen Mueller, E<lt>smueller at cpan dot orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2003-2007 by Steffen Mueller
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.6 or,
+at your option, any later version of Perl 5 you may have available.
 
 =cut
