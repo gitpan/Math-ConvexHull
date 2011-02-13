@@ -6,4 +6,5 @@ README
 t/0-pod.t
 t/0-podcover.t
 t/1-basic.t
+t/2-same-coord.t
 META.yml                                 Module meta-data (added by MakeMaker)
